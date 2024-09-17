@@ -1,8 +1,8 @@
 import TimeDisplay from "./TimeDisplay"
 import Button from "./Button"
 import { useEffect, useState } from "react"
-
-function Timer({ startTime }) {
+// 
+function Timer({ startTime, onComplete }) {
   const [remaining, setRemaining] = useState(startTime)
   const [isRunning, setRunning] = useState(false)
 
@@ -14,26 +14,25 @@ function Timer({ startTime }) {
       setRemaining((prevState) => {
         const value = prevState - 1
         if (value <= 0) {
-          setRunning(false)
-          return startTime
+          onComplete()
+          return 0
         }
         return value
       })
     }
     const interval = setInterval(tick, 1000)
     return () => clearInterval(interval)
-  }, [isRunning, startTime])
+  }, [isRunning, onComplete])
 
-  const play = () => setRunning(true)
-  const pause = () => setRunning(false)
   return (
-    <section className={`timer ${isRunning} ? "timer-ticking : ""`}>
+    <section className={`timer ${isRunning ? "timer-ticking" : ""} `}>
       <TimeDisplay time={remaining} />
       {isRunning ? (
-        <Button icon="pause" label="Pause" onClick={pause} />
+        <Button icon="pause" label="Pause" onClick={() => setRunning(false)} />
       ) : (
-        <Button icon="play" label="play" onClick={play} />
+        <Button icon="play" label="play" onClick={() => setRunning(true)} />
       )}
+      <Button icon="trash" label="Delete" onClick={onComplete} />
     </section>
   )
 }
