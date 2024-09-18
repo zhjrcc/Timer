@@ -16,7 +16,10 @@ function AddTimer({ onAdd }) {
   }
   const onSubmit = (evt) => {
     evt.preventDefault()
-    onAdd(data.minutes * 60 + data.seconds)
+    const startTime = data.minutes * 60 + data.seconds
+    if (startTime > 0) {
+      onAdd(startTime)
+    }
     setData(EMPTY)
   }
 

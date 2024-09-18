@@ -8,6 +8,8 @@ function Timer({ startTime, id, onDelete }) {
     dispatch,
   } = useTimer(startTime)
 
+  const handleDelete = () => onDelete(id)
+
   const timerClass = [
     "timer",
     isCompleted ? "timer-ringing" : "",
@@ -35,7 +37,7 @@ function Timer({ startTime, id, onDelete }) {
         label="Restart"
         onClick={() => dispatch({ type: "RESTART" })}
       />
-      <Button icon="trash" label="Delete" onClick={() => onDelete(id)} />
+      <Button icon="trash" label="Delete" onClick={handleDelete} />
     </section>
   )
 }
