@@ -1,28 +1,30 @@
 import TimeDisplay from "./TimeDisplay"
 import Button from "./Button"
 import { useEffect, useState } from "react"
-// 
+
 function Timer({ startTime, onComplete }) {
   const [remaining, setRemaining] = useState(startTime)
   const [isRunning, setRunning] = useState(false)
 
+  // 倒计时逻辑，依赖于 isRunning 状态
   useEffect(() => {
-    if (!isRunning) {
-      return
-    }
+    if (!isRunning) return
+
     function tick() {
-      setRemaining((prevState) => {
-        const value = prevState - 1
-        if (value <= 0) {
-          onComplete()
-          return 0
-        }
-        return value
-      })
+      setRemaining((prevState) => Math.max(prevState - 1, 0)) // 确保倒计时不会低于 0
     }
+
     const interval = setInterval(tick, 1000)
+
     return () => clearInterval(interval)
-  }, [isRunning, onComplete])
+  }, [isRunning])
+
+  // 当 remaining 变为 0 时，调用 onComplete
+  useEffect(() => {
+    if (remaining === 0) {
+      onComplete() // 此时调用父组件传入的回调函数
+    }
+  }, [remaining, onComplete])
 
   return (
     <section className={`timer ${isRunning ? "timer-ticking" : ""} `}>
