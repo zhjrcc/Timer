@@ -5,5 +5,4 @@ function Button({ icon, label, ...rest }) {
     </button>
   )
 }
-
 export default Button

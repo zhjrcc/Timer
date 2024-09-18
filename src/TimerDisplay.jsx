@@ -1,6 +1,6 @@
 import Number from "./Number"
 
-function TimeDisplay({ time }) {
+function TimerDisplay({ time }) {
   const minutes = Math.floor(time / 60)
   const seconds = time % 60
   return (
@@ -11,5 +11,4 @@ function TimeDisplay({ time }) {
     </ul>
   )
 }
-
-export default TimeDisplay
+export default TimerDisplay
