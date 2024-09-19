@@ -7,7 +7,7 @@ function TimerManager() {
   return (
     <div className="timers">
       {startTime > 0 ? (
-        <Timer startTime={startTime} onComplete={() => setStartTime(0)} />
+        <Timer startTime={startTime} onDelete={() => setStartTime(0)} />
       ) : (
         <AddTimer onAdd={setStartTime} />
       )}

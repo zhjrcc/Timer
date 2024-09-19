@@ -1,43 +1,42 @@
-import { useEffect, useState } from "react"
 import TimerDisplay from "./TimerDisplay"
 import Button from "./Button"
+import useTimer from "./useTimer"
 
-function Timer({ startTime, onComplete }) {
-  const [isRunning, setRunning] = useState(false)
-  const [remaining, setRemaining] = useState(startTime)
+function Timer({ startTime, id, onDelete }) {
+  const {
+    state: { remaining, isRunning, isCompleted },
+    dispatch,
+  } = useTimer(startTime)
 
-  useEffect(() => {
-    if (!isRunning) {
-      return
-    }
-    // tick每过一秒就执行一次setRemaining
-    function tick() {
-      setRemaining((prevState) => {
-        const value = prevState - 1
-        return value
-      })
-    }
-    const interval = setInterval(tick, 1000)
-    // 当依赖数组发生变化或者组件卸载时会先执行清理函数
-    return () => clearInterval(interval)
-  }, [isRunning])
+  const timerClass = [
+    "timer",
+    isCompleted ? "timer-ringing" : "",
+    isRunning ? "timer-ticking" : "",
+  ].join(" ")
 
-  useEffect(() => {
-    if (remaining === 0) {
-      onComplete()
-    }
-  }, [remaining, onComplete])
-
-  const play = () => setRunning(true)
-  const pause = () => setRunning(false)
   return (
-    <section className={`timer ${isRunning} ? "timer-ticking" : "" `}>
+    <section className={timerClass}>
       <TimerDisplay time={remaining} />
       {isRunning ? (
-        <Button icon="pause" label="Pause" onClick={pause} />
+        <Button
+          icon="pause"
+          label="Pause"
+          onClick={() => dispatch({ type: "PAUSE" })}
+        />
       ) : (
-        <Button icon="play" label="play" onClick={play} />
+        <Button
+          icon="play"
+          label="play"
+          onClick={() => dispatch({ type: "PLAY" })}
+          disabled={isCompleted}
+        />
       )}
+      <Button
+        icon="restart"
+        label="Restart"
+        onClick={() => dispatch({ type: "RESTART" })}
+      />
+      <Button icon="trash" label="DELETE" onClick={() => onDelete(id)} />
     </section>
   )
 }
